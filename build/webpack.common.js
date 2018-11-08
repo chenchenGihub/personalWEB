@@ -42,9 +42,13 @@ module.exports = {
                 exclude:/node_modules/
             },
             {
-                test:/\.scss$/,
+                test: /\.scss$|\.sass$/,
                 use:['vue-style-loader','style-loader','css-loader','sass-loader'],
                 exclude:/node_modules/
+            },
+            {
+                test: /\.css$/,
+                use:['style-loader','css-loader']
             },
             {
                 test:/\.vue$/,
@@ -57,7 +61,8 @@ module.exports = {
     },
     resolve:{
         alias: {
-            'vue$': 'vue/dist/vue.esm.js'
+            'vue$': 'vue/dist/vue.esm.js',
+            '@':path.resolve('src')
           },
           extensions: ['.ts', '.js', '.vue', '.json']
     },  
