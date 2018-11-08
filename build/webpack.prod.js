@@ -9,17 +9,6 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const webpackCommonConfig = require('./webpack.common')
 const env = require('../config/prod.env');
 
-let pathsToClean = [
-    'dist',
-]
-
-let cleanOptions = {
-    root: path.resolve(__dirname, '..'),
-    exclude: [],
-    verbose: true,
-    dry: false
-}
-
 
 let Minification = {
     collapseWhitespace: true,//去除空格,
@@ -48,7 +37,9 @@ module.exports = merge(webpackCommonConfig, {
         /**
          * 在打包之前先删除指定文件夹里的文件或者删除整个文件夹
          */
-        new CleanWebpackPlugin(pathsToClean, cleanOptions),
+
+       // new CleanWebpackPlugin(pathsToClean, cleanOptions),
+
         /**
          * 生成html模版
          */
