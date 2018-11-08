@@ -36,7 +36,7 @@ const WebpackDevConfig = merge(webpackCommonConfig, {
         host: '0.0.0.0',
         port: 9100,
         //开启热模块替换若不使用webpack.HotModuleReplacementPlugin则需要在cli里添加--hot
-        hot: true,
+        // hot: false,
         //自动打开浏览器
         open: false,
         https: false,
@@ -60,7 +60,7 @@ const WebpackDevConfig = merge(webpackCommonConfig, {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        
+
     ],
     optimization: {
         removeAvailableModules: false,
@@ -71,34 +71,39 @@ const WebpackDevConfig = merge(webpackCommonConfig, {
 
 module.exports = new Promise((resolve, reject) => {
 
-    portfinder.basePort = process.env.PORT||9100;
+    portfinder.basePort = process.env.PORT || 9100;
 
     portfinder.getPortPromise()
-        .then(port=>{
-         process.env.PORT = port;
-         WebpackDevConfig.devServer.port = port;
+        .then(port => {
+            for (let plugin of WebpackDevConfig.plugins) {
+                if (plugin.constructor.name === 'HtmlWebpackPlugin') {
+                    plugin.options = Object.assign(plugin.options, { chunksSortMode: 'none' })
+                }
+            }
+            process.env.PORT = port;
+            WebpackDevConfig.devServer.port = port;
             WebpackDevConfig.plugins.push(
                 new NotifierPlugin({
                     compilationSuccessInfo: {
-                        messages: [`你的应用运行在 ${WebpackDevConfig.devServer.https?'https':'http'}://${ip.address()}:${port}`],
+                        messages: [`你的应用运行在 ${WebpackDevConfig.devServer.https ? 'https' : 'http'}://${ip.address()}:${port}`],
                         notes: [`Congradulation!!! ${'😄'} ${'😄'} ${'😄'} ${'😄'}`]
-                      },
-                    onErrors:(severity,errors)=>{
-                        if (severity!=='error') return;
+                    },
+                    onErrors: (severity, errors) => {
+                        if (severity !== 'error') return;
                         const error = errors[0];
                         notifier.notify({
                             title: "应用报错信息如下",
                             message: severity + ': ' + error.name,
                             subtitle: error.file || '',
-                            icon: path.resolve(__dirname,'logo.png')
-                          });
+                            icon: path.resolve(__dirname, 'logo.png')
+                        });
                     }
                 })
             )
 
             resolve(WebpackDevConfig)
         })
-        .then(err=>{
+        .then(err => {
             reject(err)
-        })    
+        })
 });
