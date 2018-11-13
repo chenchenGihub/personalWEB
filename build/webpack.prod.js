@@ -1,14 +1,16 @@
 const path = require('path');
+const os = require('os');
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const merge = require('webpack-merge');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const webpackCommonConfig = require('./webpack.common')
 const env = require('../config/prod.env');
-
 
 let Minification = {
     collapseWhitespace: true,//去除空格,
@@ -16,37 +18,98 @@ let Minification = {
     removeEmptyAttributes: true,//移除空属性 eg:<div id=''></div> => <div></div>
 }
 
+let pathsToClean = [
+    'dist',
+]
+
+let cleanOptions = {
+    root: path.resolve(__dirname, '..'),
+    exclude: [],
+    verbose: true,
+    dry: false
+}
+
 module.exports = merge(webpackCommonConfig, {
     mode: 'production',
     devtool: 'source-map',
-    output: {
-        filename: '[name].[chunkhash].js',
-        path: path.resolve(__dirname, '../dist'),
-        // chunkFilename: '[id].[chunkhash].js'
-
-    },
     module: {
         rules: [
-            // {
-            //     test: require.resolve(__dirname, '../src/main.js'),
-            //     use: 'imports-loader?this=>window'
-            // }
+            {
+                test: /\.(sa|sc|c)ss$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader"
+                ],
+                exclude: /node_modules/
+            },
+        ]
+    },
+    output: {
+        path: path.resolve(__dirname, '../dist'),
+        filename: '[name].[chunkhash].js',
+        chunkFilename: '[id].[chunkhash].js'
+    },
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all'
+                },
+                styles: {
+                    name: 'styles',
+                    test: /\.(sa|sc|c)ss$/,
+                    chunks: 'all',
+                    enforce: true
+                }
+            }
+        },
+        runtimeChunk: 'single',
+        minimizer: [
+            new UglifyJSPlugin({
+                test: /\.js(\?.*)?$/i,
+                include: path.resolve(__dirname, '..dist'),
+                sourceMap: true,
+                uglifyOptions: {
+                    /**
+                     * 并发数默认cpu核数减一,加快构建速度
+                     */
+                    parallel: os.cpus().length,
+                    // ecma: 8,
+                    parse: {},
+                    warnings: false,
+                    compress: {},
+                    mangle: true,
+                    output: null,
+                    toplevel: false,
+                    nameCache: null,
+                },
+            }),
+            new OptimizeCSSAssetsPlugin({
+                test: new RegExp(
+                    '\\.(' +
+                    ['ts', 'js', 'scss', 'css'].join('|') +
+                    ')$'
+                ),
+                filename: '[path].gz[query]',
+                cache: true,
+                algorithm: 'gzip',
+                threshold: 1000,
+                minRatio: 0.8,
+                deleteOriginalAssets: true
+            })
         ]
     },
     plugins: [
-        /**
-         * 在打包之前先删除指定文件夹里的文件或者删除整个文件夹
-         */
-
-       // new CleanWebpackPlugin(pathsToClean, cleanOptions),
-
+        new CleanWebpackPlugin(pathsToClean, cleanOptions),
         /**
          * 生成html模版
          */
         new HtmlWebpackPlugin({
             title: 'a vue demo',
             filename: 'index.html',
-            // template: '../dist/index.html',
+            template: 'index.html',
             inject: 'body', //将所有js代码放置在<body>最底下，
             meta: {
                 viewport: "width=device-width,initial-scale=1,shrink-to-fit=no"
@@ -66,25 +129,19 @@ module.exports = merge(webpackCommonConfig, {
         new webpack.DefinePlugin({
             'process.env': env
         }),
-        new UglifyJSPlugin({
-            sourceMap: true
-        }),
         new WorkboxPlugin.GenerateSW({
             clientsClaim: true,
             skipWaiting: true
+        }),
+        // new webpack.DllReferencePlugin({
+        //     context: path.resolve(__dirname,'..'),
+        //     manifest: require('../dist/dll/vue.manifest.json')
+        //   })
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: '[name].[hash].css',
+            chunkFilename: '[id].[hash].css',
         })
-
-    ],
-    optimization: {
-        splitChunks: {
-            cacheGroups: {
-                vendor: {
-                    test: /[\\/]node_modules[\\/]/,
-                    name: 'vendors',
-                    chunks: 'all'
-                }
-            }
-        },
-        runtimeChunk: 'single'
-    }
+    ]
 })

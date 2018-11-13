@@ -1,15 +1,42 @@
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpackCommonConfig = require('./webpack.common')
 const portfinder = require('portfinder');
 const ip = require('ip');
 const NotifierPlugin = require('friendly-errors-webpack-plugin');
 const notifier = require('node-notifier');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+let pathsToClean = [
+    'dist',
+]
+
+let cleanOptions = {
+    root: path.resolve(__dirname, '..'),
+    exclude: [],
+    verbose: true,
+    dry: false
+}
 
 const WebpackDevConfig = merge(webpackCommonConfig, {
-    mode: 'development',
+    mode:'development',
     devtool: 'cheap-module-eval-source-map',
+    module: {
+        rules: [
+            {
+                test: /\.(sa|sc|c)ss$/,
+                use: [
+                    'vue-style-loader',
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader'
+                ],
+                exclude: /node_modules/
+            }
+        ]
+    },
     devServer: {
         //也可以使用数组，从多个目录提供内容
         contentBase: path.resolve(__dirname, '../dist'),
@@ -59,8 +86,11 @@ const WebpackDevConfig = merge(webpackCommonConfig, {
         watchContentBase: true,
     },
     plugins: [
+        /**
+         * 在打包之前先删除指定文件夹里的文件或者删除整个文件夹
+         */
+        new CleanWebpackPlugin(pathsToClean, cleanOptions),
         new webpack.HotModuleReplacementPlugin(),
-
     ],
     optimization: {
         removeAvailableModules: false,

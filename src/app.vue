@@ -1,7 +1,8 @@
 <template>
-  <ion-app mode='ios'>
-    <ion-vue-router />
-  </ion-app>
+<div class="app">
+    <router-view></router-view>
+</div>
+ 
 </template>
 
 <script lang="ts">
@@ -12,3 +13,8 @@ import Component from "vue-class-component";
 export default class App extends Vue {}
 </script>
 
+<style>
+    .app{
+        background-color: aliceblue
+    }
+</style>

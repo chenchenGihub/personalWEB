@@ -1,23 +1,17 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-let pathsToClean = [
-    'dist',
-]
 
-let cleanOptions = {
-    root: path.resolve(__dirname, '..'),
-    exclude: [],
-    verbose: true,
-    dry: false
-}
+
+
+
 
 module.exports = {
     context: path.resolve(__dirname, '..'),
-    mode: 'none',
     entry: {
         app: './src/main.ts'
     },
@@ -25,71 +19,58 @@ module.exports = {
         path: path.resolve(__dirname, '../dist'),
         filename: '[name].js',
         pathinfo: false,
-        publicPath:'/'
+        publicPath: '/'
     },
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
+                test: /\.ts$/,
                 use: [{
                     loader: 'ts-loader',
                     options: {
                         transpileOnly: true,
                         experimentalWatchApi: true,
-                        appendTsSuffixTo:[/\.vue$/]
+                        appendTsSuffixTo: [/\.vue$/]
                     },
                 }],
-                exclude:/node_modules/
+                exclude: /node_modules/
             },
             {
-                test: /\.scss$|\.sass$/,
-                use:['vue-style-loader','style-loader','css-loader','sass-loader'],
-                exclude:/node_modules/
-            },
-            {
-                test: /\.css$/,
-                use:['style-loader','css-loader']
-            },
-            {
-                test:/\.vue$/,
+                test: /\.vue$/,
                 use: [{
-                    loader:"vue-loader"
+                    loader: "vue-loader",
+                    options: {
+                        extractCSS: true
+                      }
                 }],
-                exclude:/node_modules/
+                exclude: /node_modules/
             }
         ]
     },
-    resolve:{
+    resolve: {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
-            '@':path.resolve('src')
-          },
-          extensions: ['.ts', '.js', '.vue', '.json']
-    },  
+            '@': path.resolve('src')
+        },
+        extensions: ['.ts', '.js', '.vue', '.json']
+    },
     plugins: [
-        /**
-         * 在打包之前先删除指定文件夹里的文件或者删除整个文件夹
-         */
-        new CleanWebpackPlugin(pathsToClean, cleanOptions),
         /**
          * 生成html模版
          */
         new HtmlWebpackPlugin({
+            title: 'a vue demo',
             filename: 'index.html',
             template: 'index.html',
-            inject: true,
+            inject: 'body', //将所有js代码放置在<body>最底下，
             meta: {
                 viewport: "width=device-width,initial-scale=1,shrink-to-fit=no"
-            },
-            //当生成模版失败时是否显示错误
-            showErrors:true,
-            //Allows you to skip some chunks (e.g don't add the unit-test chunk)
-            excludeChunks:``,
-            favicon:''
+            }
         }),
         new webpack.ProvidePlugin({
             join: ['lodash', 'join']
         }),
-        new VueLoaderPlugin()
+        new VueLoaderPlugin(),
+        
     ]
 }

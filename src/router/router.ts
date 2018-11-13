@@ -1,10 +1,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { IonicVueRouter } from '@modus/ionic-vue'
-import Dashboard from '../pages/dashboard.vue';
-import Edit from '../pages/edit.vue';
+import Dashboard from '../views/dashboard.vue';
+import Edit from '../views/edit.vue';
 
-Vue.use(IonicVueRouter);
+Vue.use(Router);
 
 
 let routes = {
@@ -16,10 +15,10 @@ let routes = {
         },
         {
             name:'edit',
-            path:'/edit',
+            path:'/',
             component:Edit,
         }
     ]
 }
 
-export default new IonicVueRouter(routes)
+export default new Router(routes)

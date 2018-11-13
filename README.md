@@ -1,7 +1,7 @@
 # vue-webpack
 
 #### 项目介绍
-vue mobile demo
+手写webpack并使用vue框架的例子
 
 #### 软件架构
 软件架构说明
@@ -9,15 +9,20 @@ vue mobile demo
 
 #### 安装教程
 
-1. xxxx
-2. xxxx
-3. xxxx
+1. 开启开发模式
+   npm run dev
+
+2. 本地build打包后的开发模式
+   npm run build:dev
+
+3. 生产环境的打包
+    npm run build
 
 #### 使用说明
 
-1. xxxx
-2. xxxx
-3. xxxx
+1. cd 到根目录
+2. npm i 或者  yarn add
+3. npm run dev 或 npm run build:dev
 
 #### 参与贡献
 
