@@ -38,7 +38,8 @@ module.exports = merge(webpackCommonConfig, {
                 test: /\.(sa|sc|c)ss$/,
                 use: [
                     MiniCssExtractPlugin.loader,
-                    "css-loader"
+                    "css-loader",
+                    'sass-loader'
                 ],
                 exclude: /node_modules/
             },
@@ -68,7 +69,7 @@ module.exports = merge(webpackCommonConfig, {
         runtimeChunk: 'single',
         minimizer: [
             new UglifyJSPlugin({
-                test: /\.js(\?.*)?$/i,
+                test: /\.js$/i,
                 include: path.resolve(__dirname, '..dist'),
                 sourceMap: true,
                 uglifyOptions: {
@@ -89,7 +90,7 @@ module.exports = merge(webpackCommonConfig, {
             new OptimizeCSSAssetsPlugin({
                 test: new RegExp(
                     '\\.(' +
-                    ['ts', 'js', 'scss', 'css'].join('|') +
+                    ['scss', 'css'].join('|') +
                     ')$'
                 ),
                 filename: '[path].gz[query]',
@@ -141,7 +142,7 @@ module.exports = merge(webpackCommonConfig, {
             // Options similar to the same options in webpackOptions.output
             // both options are optional
             filename: '[name].[hash].css',
-            chunkFilename: '[id].[hash].css',
+            // chunkFilename: '[id].[hash].css',
         })
     ]
 })

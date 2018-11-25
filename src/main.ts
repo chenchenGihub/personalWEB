@@ -2,7 +2,7 @@ import Vue from 'vue';
 import App from './app.vue';
 import Routes from './router/router';
 
-import '../static/css/global.css'
+import '../static/css/global.scss'
 
 
 

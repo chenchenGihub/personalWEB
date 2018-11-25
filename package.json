@@ -8,9 +8,6 @@
   "engines": {
     "node": "<=8.9.1"
   },
-  "sideEffects": [
-    "*.css"
-  ],
   "scripts": {
     "build:dev": "npm run build && http-server dist",
     "build:dll": "npm run dll && npm run build:dev",
