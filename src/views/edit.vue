@@ -1,22 +1,55 @@
 <template>
-  <div class="edit" id="edit">
-    <div v-for="item in items" :key="item.id">
-      {{item}}
+  <div>
+    <span>{{MyName}}</span>
+    <div>所有列表</div>
+    <div  v-for="item of Todos" :key="item.id">
+      {{item.text}}
     </div>
-    <button class="btn" @click="tab()">点击</button>
+    <div>完成的列表</div>
+    <div v-for="a of DoneTodos" :key="a.id">
+      {{a.text}}
+    </div>
   </div>
-
+  
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
+import { Component, Vue } from "vue-property-decorator";
+import { State, Getter, Action, Mutation, namespace } from "vuex-class";
+@Component({
+  components: {}
+})
 export default class Edit extends Vue {
+  /**
+   *  this.$store.state.count
+   */ 
+  @State("count") Count!: number;
+
+  @State(State=>State.todos) Todos!: Array<any>;
+
+  @Getter('doneTodos') DoneTodos!: Array<any>
+
+  /**
+   * 
+   */
+
   public items: Array<number> = [1, 3, 2, 1, 3];
 
-  public a = "";
+  public a = "哈哈哈哈";
+
+  mounted() {
+    console.log(this.Count);
+    console.log(this.Todos,this.DoneTodos);
+  }
+
+  created() {}
 
   tab() {}
+
+  // computed
+  get MyName(): number {
+    return this.Count;
+  }
 }
 </script>
 

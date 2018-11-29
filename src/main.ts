@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from './app.vue';
-import Routes from './router/router';
+import router from './router/router';
+import store from './store/store';
 
 import '../static/css/global.scss'
 
@@ -13,12 +14,14 @@ Vue.config.ignoredElements.push(/^ion-/);
 /**
  * 全局组件注册
  */
-Vue.component('');
+Vue.component('Counter');
+
 
 new Vue({
-    el: '#app',
-    router: Routes,
+    router,
+    store,
     render: h => h(App)
-})
+  }).$mount('#app')
+  
 
 

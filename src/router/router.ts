@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Dashboard from '../views/dashboard.vue';
 import Edit from '../views/edit.vue';
 
 Vue.use(Router);
@@ -11,7 +10,7 @@ let routes = {
         {
             name:'main',
             path:'/main',
-            component:Dashboard,
+            component:() => import('../views/dashboard.vue')
         },
         {
             name:'edit',
