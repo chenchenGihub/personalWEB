@@ -40,8 +40,7 @@ module.exports = merge(webpackCommonConfig, {
                     MiniCssExtractPlugin.loader,
                     "css-loader",
                     'sass-loader'
-                ],
-                exclude: /node_modules/
+                ]
             },
         ]
     },
@@ -82,10 +81,13 @@ module.exports = merge(webpackCommonConfig, {
                     warnings: false,
                     compress: {},
                     mangle: true,
-                    output: null,
                     toplevel: false,
                     nameCache: null,
+                    output: {
+                        drop_console:true
+                    }
                 },
+                
             }),
             new OptimizeCSSAssetsPlugin({
                 test: new RegExp(

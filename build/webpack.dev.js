@@ -32,8 +32,7 @@ const WebpackDevConfig = merge(webpackCommonConfig, {
                     'style-loader',
                     'css-loader',
                     'sass-loader'
-                ],
-                exclude: /node_modules/
+                ]
             }
         ]
     },

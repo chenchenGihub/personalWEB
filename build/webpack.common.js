@@ -41,10 +41,19 @@ module.exports = {
                     loader: "vue-loader",
                     options: {
                         extractCSS: true
-                      }
+                    }
                 }],
                 exclude: /node_modules/
-            }
+            },
+            {
+                test: /\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2|svg|svgz)(\?.+)?$/,
+                use: [{
+                  loader: 'url-loader',
+                  options: {
+                    limit: 10000
+                  }
+                }]
+              }
         ]
     },
     resolve: {
@@ -71,6 +80,6 @@ module.exports = {
             join: ['lodash', 'join']
         }),
         new VueLoaderPlugin(),
-        
+
     ]
 }
