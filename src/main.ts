@@ -3,16 +3,28 @@ import Vue from 'vue';
 import App from './app.vue';
 import router from './router/router';
 import store from './store/store';
+Vue.config.productionTip = false
+Vue.config.ignoredElements.push(/^ion-/);
+
 import '../static/css/global.scss'
 
-import { Button, Select,Switch } from 'element-ui';
+import { 
+  Button, 
+  Select,
+  Switch,
+  Menu,
+  Submenu,
+  MenuItem,
+  MenuItemGroup,
+  Radio,
+  RadioGroup,
+  RadioButton,
+ } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'
 
 
 
-Vue.config.productionTip = false
 
-Vue.config.ignoredElements.push(/^ion-/);
 
 /**
  * 全局组件注册
@@ -22,6 +34,12 @@ Vue.config.ignoredElements.push(/^ion-/);
 Vue.use(Button)
 Vue.use(Select);
 Vue.use(Switch);
+Vue.use(Menu);
+Vue.use(Submenu);
+Vue.use(MenuItem);
+Vue.use(Radio);
+Vue.use(RadioGroup);
+Vue.use(RadioButton);
 
 new Vue({
     router,
