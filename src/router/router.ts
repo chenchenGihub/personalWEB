@@ -13,6 +13,11 @@ let routes = {
             component:() => import('../views/dashboard.vue')
         },
         {
+            name:'three',
+            path:'/threeDemo',
+            component:() => import('../views/threedemo.vue')
+        },
+        {
             name:'edit',
             path:'/',
             component:Edit,

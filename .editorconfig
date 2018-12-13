@@ -1,0 +1,16 @@
+root = true
+
+#unix风格的
+[*]
+end_of_line = lf
+insert_final_newline = true
+
+#文件编码集
+[*.{js,ts,tsx,jsx}]
+charset = utf-8
+
+[*.{js,ts}]
+indent_style = tab
+indent_size = 1
+
+
